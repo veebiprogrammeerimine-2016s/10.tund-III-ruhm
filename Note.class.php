@@ -25,13 +25,30 @@ class Note {
 	}
 	
 	
-	function getAllNotes() {
+	function getAllNotes($q) {
 		
-		$stmt = $this->connection->prepare("
-			SELECT id, note, color
-			FROM colorNotes
-			WHERE deleted IS NULL
-		");
+		//otsime
+		if($q != "") {
+			
+			echo "Otsin: ".$q;
+			
+			$stmt = $this->connection->prepare("
+				SELECT id, note, color
+				FROM colorNotes
+				WHERE deleted IS NULL
+				AND (note LIKE ? OR color LIKE ?)
+			");
+			$searchWord = "%".$q."%";
+			$stmt->bind_param("ss", $searchWord, $searchWord);
+		
+		}else{
+			//ei otsi
+			$stmt = $this->connection->prepare("
+				SELECT id, note, color
+				FROM colorNotes
+				WHERE deleted IS NULL
+			");
+		}
 		
 		$stmt->bind_result($id, $note, $color);
 		$stmt->execute();
@@ -122,5 +139,6 @@ class Note {
 		$stmt->close();
 		
 	}
+	
 } 
 ?>

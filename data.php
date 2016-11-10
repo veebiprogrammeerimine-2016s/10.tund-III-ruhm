@@ -37,7 +37,16 @@
 		
 	}
 	
-	$notes = $Note->getAllNotes();
+	
+	$q = "";
+	
+	// otsisõna aadressirealt
+	if(isset($_GET["q"])){
+		$q = $Helper->cleanInput($_GET["q"]);
+	}
+	
+	
+	$notes = $Note->getAllNotes($q);
 	
 	//echo "<pre>";
 	//var_dump($notes);
@@ -70,6 +79,10 @@
 
 <h2>arhiiv</h2>
 
+<form>
+	<input type="search" name="q" value="<?=$q;?>">
+	<input type="submit" value="Otsi">	
+</form>
 
 <?php 
 
@@ -114,6 +127,3 @@
 	echo $html;
 
 ?>
-
-
-
